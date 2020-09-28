@@ -40,10 +40,14 @@ func (h *hello) OnInputChange(ctx app.Context, e app.Event) {
 func main() {
 	h := &app.Handler{
         Title:  "Hello Demo",
-        Author: "Maxence Charriere",
+        Author: "Ian Ulanday",
     }
 
-    if err := http.ListenAndServe(":7777", h); err != nil {
+    if err := http.ListenAndServe(":80", h); err != nil {
         panic(err)
     }
+
+    app.Route("/", &hello{})
+    app.Route("/hello", &hello{})
+    app.Run()
 }

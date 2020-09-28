@@ -8,7 +8,6 @@ WORKDIR /go/src/app
 COPY /app ./
 
 # get go-app stuff from github
-RUN go mod download
 RUN go mod init github.com/ijulanday/a-simple-web-gui.git
 RUN go get -u -v github.com/maxence-charriere/go-app/v7
 
