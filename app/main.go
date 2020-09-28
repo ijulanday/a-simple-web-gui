@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
+
 	"github.com/maxence-charriere/go-app/v7/pkg/app"
 )
 
@@ -39,14 +38,12 @@ func (h *hello) OnInputChange(ctx app.Context, e app.Event) {
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("LET'S FREAKING GOOOOOOOO!\n"))
-	})
-	addr := ":80"
-	fmt.Println("Example app listening on port ", addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	h := &app.Handler{
+        Title:  "Hello Demo",
+        Author: "Maxence Charriere",
+    }
 
-	app.Route("/", &hello{})
-    app.Route("/hello", &hello{})
-    app.Run()
+    if err := http.ListenAndServe(":7777", h); err != nil {
+        panic(err)
+    }
 }
