@@ -61,5 +61,5 @@ func main() {
     r.HandleFunc("/", mainPageGetHandler).Methods("GET")
     r.HandleFunc("/", mainPagePostHandler).Methods("Post")
     http.Handle("/", r)
-    http.ListenAndServe(":8080", nil)
+    http.ListenAndServe(":80", nil)
 }

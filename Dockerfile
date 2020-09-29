@@ -11,6 +11,8 @@ COPY /app ./
 RUN go get github.com/gorilla/mux
 RUN go get github.com/go-redis/redis
 
+RUN go build
+
 # stuff from example (https://github.com/balena-io-examples/balena-go-hello-world/blob/master/Dockerfile.template)
 FROM balenalib/beaglebone-green-debian-golang:stretch
 
