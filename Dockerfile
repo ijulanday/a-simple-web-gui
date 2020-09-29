@@ -8,10 +8,8 @@ WORKDIR /go/src/app
 COPY /app ./
 
 # get go-app stuff from github
-RUN go mod init github.com/ijulanday/a-simple-web-gui.git
-RUN go get -u -v github.com/maxence-charriere/go-app/v7
-
-RUN go build -o app .
+RUN go get github.com/gorilla/mux
+RUN go get github.com/go-redis/redis
 
 # stuff from example (https://github.com/balena-io-examples/balena-go-hello-world/blob/master/Dockerfile.template)
 FROM balenalib/beaglebone-green-debian-golang:stretch

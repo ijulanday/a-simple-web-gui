@@ -1,53 +1,65 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/maxence-charriere/go-app/v7/pkg/app"
+    "net/http"
+    "html/template"
+    "github.com/gorilla/mux"
+    "github.com/go-redis/redis"
 )
 
-type hello struct {
-    app.Compo
-    name string
+var client *redis.Client
+
+type Comment struct {
+    Author string
+    Comment string
 }
 
-
-func (h *hello) Render() app.UI {
-    return app.Div().Body(
-        app.Main().Body(
-            app.H1().Body(
-                app.Text("Hello, "),
-                app.If(h.name != "",
-                    app.Text(h.name),
-                ).Else(
-                    app.Text("World"),
-                ),
-            ),
-            app.Input().
-                Value(h.name).
-                Placeholder("What is your name?").
-                AutoFocus(true).
-                OnChange(h.OnInputChange),
-        ),
-    )
+type MainPage struct {
+    Title string
+    Subtitle string
+    JumboColor string
+    JumboBg string
+    BodyColor string
+    Comments []Comment
 }
 
-func (h *hello) OnInputChange(ctx app.Context, e app.Event) {
-    h.name = ctx.JSSrc.Get("value").String()
-    h.Update()
+var p MainPage = MainPage{
+    Title: "Bad Discord", 
+    Subtitle: "\"It's just worse\"",
+    JumboColor: "whitesmoke",
+    JumboBg: "dimgrey",
+    BodyColor: "grey",
+    Comments: []Comment{},
+}
+
+func mainPageGetHandler(w http.ResponseWriter, r *http.Request) {
+    //comments, _ := client.LRange("comments", 0, 10).Result()
+    t, _ := template.ParseFiles("templates/main.html")
+    t.Execute(w,p)
+}
+
+func mainPagePostHandler(w http.ResponseWriter, r *http.Request) {
+    r.ParseForm()
+    c := Comment {
+        Author: r.PostForm.Get("author"),
+        Comment: r.PostForm.Get("comment"),
+    } 
+    p.Comments = append([]Comment{c}, p.Comments...)
+    if len(p.Comments) > 10 {
+        p.Comments = p.Comments[:len(p.Comments) - 1]
+    }
+    t, _ := template.ParseFiles("templates/main.html")
+    t.Execute(w,p)
 }
 
 func main() {
-	h := &app.Handler{
-        Title:  "Hello Demo",
-        Author: "Ian Ulanday",
-    }
+    client = redis.NewClient(&redis.Options{
+        Addr: "localhost:6379",
+    })
 
-    if err := http.ListenAndServe(":80", h); err != nil {
-        panic(err)
-    }
-
-    app.Route("/", &hello{})
-    app.Route("/hello", &hello{})
-    app.Run()
+    r := mux.NewRouter()
+    r.HandleFunc("/", mainPageGetHandler).Methods("GET")
+    r.HandleFunc("/", mainPagePostHandler).Methods("Post")
+    http.Handle("/", r)
+    http.ListenAndServe(":8080", nil)
 }

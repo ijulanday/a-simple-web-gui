@@ -1,0 +1,58 @@
+ <!DOCTYPE html>
+ <html lang="en">
+  <head>
+    <title>A Simple Web Gui</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+  </head>
+</html>
+
+<style>
+    .jumbotron {
+        background-color: {{ .JumboBg }};
+        color: {{ .JumboColor }};
+    }
+    body {
+        background-color: {{ .BodyColor }};
+    }
+</style>
+
+ <div class="jumbotron text-center" id="jumbotron">
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Subtitle }}</p>
+</div>
+  
+  <div class="container">
+    <div class="col-sm-3">
+        <h2>Fun Stuff</h2>
+        <div class="row">
+            <p>Undecided</p>
+        </div>
+        <div class="row">
+            <p>Hmmmm</p>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        <h2>Post a comment</h2>
+        <form method="POST">
+            <label>Name:</label><br>
+            <input type="text" name="author"><br>
+            <label>Comment:</label><br>
+            <textarea name="comment"></textarea>
+            <div>
+                <button type="submit">Post!</button>
+            </div>
+        </form>
+        <h2>Discussion</h2>
+        {{ range .Comments }}
+        <div class="row">
+            <h4>{{ .Author }}</h4>
+            <p>{{ .Comment }}</p>
+        </div>
+        {{ end }}
+    </div>
+  </div> 
+
+
