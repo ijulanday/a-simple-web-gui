@@ -38,16 +38,16 @@
         <h2>Post a comment</h2>
         <form method="POST">
             <label>Name:</label><br>
-            <input type="text" name="author"><br>
+            <input type="text" name="author" size="50"><br>
             <label>Comment:</label><br>
-            <textarea name="comment"></textarea>
+            <textarea name="comment" cols="100"></textarea>
             <div>
                 <button type="submit">Post!</button>
             </div>
         </form>
         <h2>Discussion</h2>
         {{ range .Comments }}
-        <div class="row">
+        <div class="row" style="padding: 15px">
             <h4>{{ .Author }}</h4>
             <p>{{ .Comment }}</p>
         </div>
